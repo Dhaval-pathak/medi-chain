@@ -1,0 +1,25 @@
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import LoginForm from './components/LoginForm';
+import RegistrationForm from './components/RegistrationForm';
+import { DoctorDashboard } from './components/Dashboards/DoctorDashboard';
+import { PatientDashboard } from './components/Dashboards/PatientDashboard';
+import { InsuranceDashboard } from './components/Dashboards/InsuranceDashboard';
+import { ErrorPage } from './components/ErrorPage';
+import NewPatientRegistration from './components/Dashboards/NewPatientRegistration';
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <BrowserRouter>
+    <Routes>
+      <Route path="/" element={<LoginForm />} />
+      <Route path="/register" element={<RegistrationForm />} /> 
+      <Route path="/doctor-dashboard" element={<DoctorDashboard />} /> 
+      <Route path="/patient-dashboard" element={<PatientDashboard />} /> 
+      <Route path="/insurance-dashboard" element={<InsuranceDashboard />} /> 
+      <Route path="/error-page" element={<ErrorPage />} /> 
+      <Route path="/new-patient-registration" element={<NewPatientRegistration />} />
+      {/* Add more routes as you build components */}
+    </Routes>
+  </BrowserRouter>
+);
