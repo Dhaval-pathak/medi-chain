@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button, TextField, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 export const DoctorDashboard = () => {
     const [showPatientForm, setShowPatientForm] = useState(false);
@@ -26,7 +26,8 @@ export const DoctorDashboard = () => {
     }
 
     const handleSubmitPatientId = () => {
-        // TODO: Implement logic for patient ID submission
+        navigate('/create-medical-record'); 
+
     };
 
     return (

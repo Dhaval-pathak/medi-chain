@@ -8,6 +8,7 @@ import { PatientDashboard } from './components/Dashboards/PatientDashboard';
 import { InsuranceDashboard } from './components/Dashboards/InsuranceDashboard';
 import { ErrorPage } from './components/ErrorPage';
 import NewPatientRegistration from './components/Dashboards/NewPatientRegistration';
+import MedicalRecordForm from './components/Dashboards/createMedicalRecord';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <BrowserRouter>
@@ -19,6 +20,7 @@ root.render(
       <Route path="/insurance-dashboard" element={<InsuranceDashboard />} /> 
       <Route path="/error-page" element={<ErrorPage />} /> 
       <Route path="/new-patient-registration" element={<NewPatientRegistration />} />
+      <Route path="/create-medical-record" element={<MedicalRecordForm />} />
       {/* Add more routes as you build components */}
     </Routes>
   </BrowserRouter>

@@ -10,7 +10,7 @@ import {
     Button,
     Typography,
 } from '@mui/material';
-import { addPatient } from '../../api/apiFunctions';
+import { addPatientToBlock } from '../../api/web3Functions';
 const NewPatientRegistration = () => {
     const [formData, setFormData] = useState({
         firstName: '',
@@ -35,13 +35,8 @@ const NewPatientRegistration = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         // Handle form submission logic here
-
-        try {
-            const response = await addPatient(formData);
-            console.log('Registration success', response);
-        } catch (error) {
-            console.log('Registration failed', error);
-        }
+        await addPatientToBlock(formData);
+        
     };
 
     return (
