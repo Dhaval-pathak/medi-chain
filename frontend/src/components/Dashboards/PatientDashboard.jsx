@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { getAllMedicalRecords } from '../../api/web3Functions';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
+import { getAllMedicalRecords, assignInsuranceCompanyToBlock } from '../../api/web3Functions';
+import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, TextField, Modal, Backdrop, Fade } from '@mui/material';
+import PatientDetails from './PatientDetails';
 
 export const PatientDashboard = () => {
   const [medicalRecords, setMedicalRecords] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [insuranceCompanyAddress, setInsuranceCompanyAddress] = useState('');
+  const [assigningInsurance, setAssigningInsurance] = useState(false);
+  const [openModal, setOpenModal] = useState(false); // State for controlling the modal
 
   useEffect(() => {
     const fetchMedicalRecords = async () => {
       try {
-        const patientId = 1;
+        const patientId = 1; // Replace with the desired patient ID
         const records = await getAllMedicalRecords(patientId);
         setMedicalRecords(records);
         console.log(records)
@@ -22,23 +26,104 @@ export const PatientDashboard = () => {
     fetchMedicalRecords();
   }, []);
 
+  const handleAssignInsurance = async () => {
+    if (!insuranceCompanyAddress) {
+      alert('Please provide an insurance company address.');
+      return;
+    }
+
+    setAssigningInsurance(true);
+    try {
+      // Assuming there's a function to assign insurance company in your API
+      await assignInsuranceCompanyToBlock(1, insuranceCompanyAddress);
+      alert('Insurance company assigned successfully.');
+      setInsuranceCompanyAddress('');
+      // You might want to refresh medical records here or update the specific record's insurance company
+    } catch (error) {
+      console.error('Error assigning insurance company:', error);
+      alert('Error assigning insurance company. Please try again.');
+    } finally {
+      setAssigningInsurance(false);
+    }
+  };
+
+  const handleOpenModal = () => {
+    setOpenModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
+
   return (
-    <div>
-      <h1>Patient Dashboard</h1>
+
+    <Box sx={{ maxWidth: '90%', mx: 'auto' }}>
+      <Box
+        sx={{
+          backgroundColor: '#2a6d98',
+          color: '#fff',
+          padding: '16px',
+          borderRadius: '8px',
+          boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.25)',
+          textAlign: 'center',
+          mb: 4,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <h1 style={{ margin: 0, fontSize: '2rem' }}>Patient Dashboard</h1>
+      </Box>
+      
+      <PatientDetails patientId={1} />
+      
+      <Modal
+        open={openModal}
+        onClose={handleCloseModal}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
+      >
+        <Fade in={openModal}>
+          <Box sx={{ bgcolor: 'white', p: 4, width: 400 }}>
+            <h2 id="modal-modal-title">Insurance Company Address</h2>
+            <TextField
+              label="Insurance Company Address"
+              value={insuranceCompanyAddress}
+              onChange={(e) => setInsuranceCompanyAddress(e.target.value)}
+              variant="outlined"
+              fullWidth
+              sx={{ mb: 2 }}
+            />
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleAssignInsurance}
+              disabled={assigningInsurance}
+            >
+              Assign Insurance
+            </Button>
+          </Box>
+        </Fade>
+      </Modal>
       {loading ? (
         <p>Loading...</p>
       ) : medicalRecords.length === 0 ? (
         <p>No medical records found.</p>
       ) : (
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label="medical records table">
+        <TableContainer component={Paper} sx={{ backgroundColor: '#f0f8ff', maxWidth: '100%' }}>
+          <Table sx={{ backgroundColor: '#e6f0ff' }} aria-label="medical records table">
             <TableHead>
               <TableRow>
-                <TableCell>Bill ID</TableCell>
-                <TableCell align="right">Amount</TableCell>
-                <TableCell align="right">Description</TableCell>
-                <TableCell align="right">Treatment Date</TableCell>
-                
+                <TableCell sx={{ backgroundColor: '#b3d9ff', fontWeight: 'bold' }}>Bill ID</TableCell>
+                <TableCell sx={{ backgroundColor: '#b3d9ff', fontWeight: 'bold' }} align="right">Amount</TableCell>
+                <TableCell sx={{ backgroundColor: '#b3d9ff', fontWeight: 'bold' }} align="right">Description</TableCell>
+                <TableCell sx={{ backgroundColor: '#b3d9ff', fontWeight: 'bold' }} align="right">Treatment Date</TableCell>
+                <TableCell sx={{ backgroundColor: '#b3d9ff', fontWeight: 'bold' }} align="right">Status</TableCell> {/* Added Status column */}
               </TableRow>
             </TableHead>
             <TableBody>
@@ -48,13 +133,20 @@ export const PatientDashboard = () => {
                   <TableCell align="right">{parseInt(record.amount)}</TableCell>
                   <TableCell align="right">{record.description}</TableCell>
                   <TableCell align="right">{record.treatmentDate}</TableCell>
-                  
+                  <TableCell align="right">{record.isProcessed ?
+                    <Button variant="contained" color="primary" disabled>
+                      Claimed
+                    </Button> :
+                    <Button variant="contained" color="primary" onClick={handleOpenModal} >
+                      Not Claimed
+                    </Button>
+                  }</TableCell> {/* Display Status */}
                 </TableRow>
               ))}
             </TableBody>
           </Table>
         </TableContainer>
       )}
-    </div>
+    </Box>
   );
 };

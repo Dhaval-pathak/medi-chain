@@ -24,13 +24,3 @@ export async function loginUser(userData) {
     throw error; 
   }
 }
-
-export async function addPatient(userData) {
-  try {
-    const response = await axios.post('http://localhost:3001/api/addPatients', userData);
-    return response.data; 
-  } catch (error) {
-    console.error('Login failed:', error);
-    throw error; 
-  }
-}

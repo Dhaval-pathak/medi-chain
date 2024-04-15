@@ -1,7 +1,6 @@
 import { initWeb3 } from '../web3config'; // Import the initWeb3 function from your web3 utility file
-
 // Contract ABI and deployed contract address (you can get these from the Truffle migration output)
-const contractABI = [
+const contractABI =[
   {
     "inputs": [
       {
@@ -272,8 +271,7 @@ const contractABI = [
       }
     ],
     "stateMutability": "view",
-    "type": "function",
-    "constant": true
+    "type": "function"
   },
   {
     "inputs": [
@@ -294,12 +292,12 @@ const contractABI = [
         "components": [
           {
             "internalType": "uint256",
-            "name": "patientId",
+            "name": "billId",
             "type": "uint256"
           },
           {
             "internalType": "uint256",
-            "name": "billId",
+            "name": "patientId",
             "type": "uint256"
           },
           {
@@ -334,8 +332,7 @@ const contractABI = [
       }
     ],
     "stateMutability": "view",
-    "type": "function",
-    "constant": true
+    "type": "function"
   },
   {
     "inputs": [
@@ -351,12 +348,12 @@ const contractABI = [
         "components": [
           {
             "internalType": "uint256",
-            "name": "patientId",
+            "name": "billId",
             "type": "uint256"
           },
           {
             "internalType": "uint256",
-            "name": "billId",
+            "name": "patientId",
             "type": "uint256"
           },
           {
@@ -391,11 +388,10 @@ const contractABI = [
       }
     ],
     "stateMutability": "view",
-    "type": "function",
-    "constant": true
+    "type": "function"
   }
 ];
-const contractAddress = '0xCBa8D91C1F42A95e98725AAA5E2844386c81Aa99'; // Paste the deployed contract address here
+const contractAddress = '0x9D31Da5A5d0C17434A9aD30b48035461A5B5528B'; // Paste the deployed contract address here
 
 export async function addMedicalBillToBlock(name, age, medicalHistory, billAmount, billDescription, treatmentDate) {
   const web3 = await initWeb3(); // Initialize Web3 with the user's Ethereum provider (e.g., Metamask)
@@ -427,26 +423,40 @@ export async function addPatientToBlock(formData) {
   await contract.methods.addPatient(firstName,mobileNo,patientHistory).send({ from: accounts[0] });
 }
 
+export async function getMedicalBillWithBillID(patiendId,billId){
+  try {
+    const web3 = await initWeb3();
+    const contract = new web3.eth.Contract(contractABI, contractAddress);
+    const records = await contract.methods.getMedicalBill(patiendId,billId).call();
+    return records;
+} catch (error) {
+    console.error('Error fetching all medical records:', error);
+    throw error;
+}
+}
 
-// try {
-//   await registerUserWeb3(username, email, password, role);
-//   // Handle success
-//   console.log('registration succesful')
-// } catch (error) {
-//   // Handle error
-//   console.log('registration failed')
+export async function assignInsuranceCompanyToBlock(patiendId,insuranceCompanyAddress){
+  const web3 = await initWeb3(); 
+  const accounts = await web3.eth.getAccounts();
+  const contract = new web3.eth.Contract(contractABI, contractAddress);
+  await contract.methods.assignInsuranceCompany(patiendId,insuranceCompanyAddress).send({ from: accounts[0] });
+}
 
-// }
-// };
+export async function processMedicalBillToBlock(patiendId,billId){
+  const web3 = await initWeb3(); 
+  const accounts = await web3.eth.getAccounts();
+  const contract = new web3.eth.Contract(contractABI, contractAddress);
+  await contract.methods.processMedicalBill(patiendId,billId).send({ from: accounts[0] });
+}
 
-// const handleGetUserData = async () => {
-// try {
-//   const web3=await initWeb3();
-//   const userAddress = await web3.eth.getAccounts();
-//   const data = await getUserData(userAddress[0]);
-//   // setUserData(data);
-//   console.log(data)
-  
-// } catch (error) {
-//   // Handle error
-// }
+export async function getPatientDetailFromBlock(patiendId){
+  try {
+    const web3 = await initWeb3();
+    const contract = new web3.eth.Contract(contractABI, contractAddress);
+    const records = await contract.methods.getPatient(patiendId).call();
+    return records;
+} catch (error) {
+    console.error('Error fetching all medical records:', error);
+    throw error;
+}
+}

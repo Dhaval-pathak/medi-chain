@@ -6,6 +6,12 @@ contract PatientDataManagementSystem {
         uint256 id;
         string name;
         uint256 age;
+        string mobileNumber;
+        string email;
+        string bloodGroup;
+        string gender;
+        string occupation;
+        string marriedStatus;
         string medicalHistory;
         address patientAddress;
         address insuranceCompany;
@@ -37,11 +43,10 @@ contract PatientDataManagementSystem {
         authorizedHospital = _authorizedHospital;
     }
     
-    function addPatient(string memory _name, uint256 _age, string memory _medicalHistory) public {
+    function addPatient(uint256 _id, string memory _name, string memory _mobile, string memory _email, string memory _bloodGroup,string memory _gender,string memory _occupation, string memory _marriedStatus, uint256 _age, string memory _medicalHistory) public {
         require(msg.sender == authorizedHospital, "Only the authorized hospital can add patients");
-        patientCounter++;
-        patients[patientCounter] = Patient(patientCounter, _name, _age, _medicalHistory, msg.sender, address(0), new uint256[](0));
-        emit NewPatient(patientCounter, _name, _age, _medicalHistory, msg.sender);
+        patients[_id] = Patient(_id, _name, _age,_mobile,_email,_bloodGroup,_gender,_occupation,_marriedStatus, _medicalHistory,  msg.sender, address(0), new uint256[](0));
+        emit NewPatient(_id, _name, _age, _medicalHistory, msg.sender);
     }
 
     function addMedicalBill(uint256 _patientId, uint256 _amount, string memory _description, string memory _treatmentDate) public {
@@ -53,15 +58,15 @@ contract PatientDataManagementSystem {
         emit NewMedicalBill(_patientId, billId, _amount, _description, _treatmentDate, address(0));
     }
 
-    function assignInsuranceCompany(uint256 _patientId, address _insuranceCompany) public {
-        patients[_patientId].insuranceCompany = _insuranceCompany;
-        // Update insuranceCompany field for all medical bills of the patient
-        uint256[] storage billIds = patients[_patientId].billIds;
-        for (uint256 i = 0; i < billIds.length; i++) {
-            uint256 billId = billIds[i];
+    function assignInsuranceCompany(uint256 _patientId, uint256 billId,  address _insuranceCompany) public {
+        if(medicalBills[_patientId][billId].insuranceCompany == address(0) && patients[_patientId].insuranceCompany == address(0)){
+            patients[_patientId].insuranceCompany = _insuranceCompany;
             medicalBills[_patientId][billId].insuranceCompany = _insuranceCompany;
+            emit InsuranceCompanyAssigned(_patientId, _insuranceCompany);
         }
-        emit InsuranceCompanyAssigned(_patientId, _insuranceCompany);
+        else{
+            revert("Insurance Company already assigned");
+        }
     }
 
     function processMedicalBill(uint256 _patientId, uint256 _billId) public {

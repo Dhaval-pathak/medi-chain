@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
 import { Button, TextField, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import { Navigate, useNavigate } from 'react-router-dom';
+import { loginUser } from '../../api/apiFunctions';
 
 export const DoctorDashboard = () => {
     const [showPatientForm, setShowPatientForm] = useState(false);
     const [isRegistration] = useState(false);  //extra
-    const [patientId, setPatientId] = useState('');
     const navigate = useNavigate();
 
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState(null);
     
 
     const handleWriteRecord = () => setShowPatientForm(true);
@@ -15,7 +18,6 @@ export const DoctorDashboard = () => {
         console.log('Reading patient record...');
     };
 
-    const handlePatientIdChange = (event) => setPatientId(event.target.value);
     const handleDialogClose = () => {
         setShowPatientForm(false);
         
@@ -25,9 +27,22 @@ export const DoctorDashboard = () => {
         navigate('/new-patient-registration'); 
     }
 
-    const handleSubmitPatientId = () => {
-        navigate('/create-medical-record'); 
-
+    const handleSubmitPatientId = async (event) => {
+        event.preventDefault();
+        try {
+            const response = await loginUser({ username, password });
+            if (response.role === 'patient') {
+                navigate('/create-medical-record');
+            }else{
+                console.error('Login failed:', "Not patient details");
+                setError('Not patient details');
+            }
+            
+            console.log('Login successful:', response); // Log successful login response
+        } catch (error) {
+            console.error('Login failed:', error);
+            setError('Incorrect username or password');
+        }
     };
 
     return (
@@ -57,8 +72,8 @@ export const DoctorDashboard = () => {
             <Dialog open={showPatientForm} onClose={handleDialogClose}>
                 <DialogTitle>Patient Identification</DialogTitle>
                 <DialogContent>
-                    <TextField label="Patient ID" value={patientId} onChange={handlePatientIdChange} />
-                    <TextField label="Password" type="password" />
+                    <TextField label="Patient ID" value={username} onChange={(e)=> setUsername(e.target.value)} />
+                    <TextField label="Password" type="password" value={password} onChange={(e)=> setPassword(e.target.value)} />
                     <Button onClick={newRegistration}>Not Registered?</Button>
                 </DialogContent>
                 <DialogActions>

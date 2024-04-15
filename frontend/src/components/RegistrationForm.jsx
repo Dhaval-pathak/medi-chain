@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { TextField, Button, Typography, Container, Box, Card, CardContent } from '@mui/material';
 import { Link } from 'react-router-dom';
 import Alert from '@mui/material/Alert';
-
-import {registerUser} from '../api/apiFunctions';
+import { registerUser } from '../api/apiFunctions';
 
 const RegistrationForm = () => {
   const [username, setUsername] = useState('');
@@ -12,21 +11,20 @@ const RegistrationForm = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
-  const [role, setRole] = useState('doctor'); // State for storing selected role
+  const [role, setRole] = useState('doctor');
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setErrorMessage(''); // Clear error message before submission
+    setErrorMessage('');
     setSuccessMessage('');
 
-    // Validate password match
     if (password !== confirmPassword) {
-      setErrorMessage('Passwords does not match');
+      setErrorMessage('Passwords do not match');
       return;
     }
 
     try {
-      const result = await registerUser({ username, email, password ,role});
+      const result = await registerUser({ username, email, password, role });
       console.log('Registration result:', result);
       setSuccessMessage(result);
     } catch (error) {
@@ -45,9 +43,20 @@ const RegistrationForm = () => {
           marginTop: 8,
         }}
       >
-        <Card sx={{ padding: 4, borderRadius: 2 }}>
+        <Card
+          sx={{
+            padding: 4,
+            borderRadius: 2,
+            backgroundColor: '#f5f5f5',
+            boxShadow: '0px 2px 10px rgba(0, 0, 0, 0.1)',
+          }}
+        >
           <CardContent>
-            <Typography variant="h5" gutterBottom>
+            <Typography
+              variant="h5"
+              gutterBottom
+              sx={{ fontWeight: 'bold', color: '#333' }}
+            >
               Registration
             </Typography>
             <form onSubmit={handleSubmit}>
@@ -58,7 +67,7 @@ const RegistrationForm = () => {
                 margin="normal"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-
+                sx={{ backgroundColor: '#fff' }}
               />
               <TextField
                 label="Email"
@@ -68,6 +77,7 @@ const RegistrationForm = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 type="email"
+                sx={{ backgroundColor: '#fff' }}
               />
               <TextField
                 label="Password"
@@ -77,7 +87,7 @@ const RegistrationForm = () => {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-
+                sx={{ backgroundColor: '#fff' }}
               />
               <TextField
                 label="Confirm Password"
@@ -87,9 +97,14 @@ const RegistrationForm = () => {
                 type="password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
+                sx={{ backgroundColor: '#fff' }}
               />
 
-              <Typography variant="body1" gutterBottom>
+              <Typography
+                variant="body1"
+                gutterBottom
+                sx={{ marginTop: 2, color: '#333' }}
+              >
                 Select Role:
               </Typography>
               <select
@@ -101,42 +116,50 @@ const RegistrationForm = () => {
                   borderRadius: '4px',
                   border: '1px solid #ccc',
                   marginBottom: '1rem',
+                  backgroundColor: '#fff',
                 }}
               >
-                
                 <option value="doctor">Doctor</option>
                 <option value="patient">Patient</option>
                 <option value="insurance">Insurance Company</option>
               </select>
 
-              {successMessage &&
-                <Alert variant="filled" severity="success">
+              {successMessage && (
+                <Alert variant="filled" severity="success" sx={{ marginTop: 2 }}>
                   {successMessage}
                 </Alert>
-              }
+              )}
 
-              {errorMessage &&
-                <Alert variant="filled" severity="error">
+              {errorMessage && (
+                <Alert variant="filled" severity="error" sx={{ marginTop: 2 }}>
                   {errorMessage}
                 </Alert>
-              }
-
-
+              )}
 
               <Button
                 type="submit"
                 variant="contained"
                 color="primary"
                 fullWidth
-                sx={{ marginTop: 2 }}
+                sx={{
+                  marginTop: 2,
+                  backgroundColor: '#2196f3',
+                  '&:hover': {
+                    backgroundColor: '#1976d2',
+                  },
+                }}
               >
                 Register
               </Button>
             </form>
           </CardContent>
         </Card>
-        <Typography variant="body2" marginTop={2}>
-          Already have an account? <Link to="/">Login</Link>
+        <Typography
+          variant="body2"
+          marginTop={2}
+          sx={{ color: '#666' }}
+        >
+          Already have an account? <Link to="/" style={{ color: '#2196f3' }}>Login</Link>
         </Typography>
       </Box>
     </Container>

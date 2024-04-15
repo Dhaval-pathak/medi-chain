@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
+import { registerUser } from '../../api/apiFunctions';
+import { addPatientToBlock } from '../../api/web3Functions';
 import {
     Box,
     Grid,
@@ -10,12 +13,10 @@ import {
     Button,
     Typography,
 } from '@mui/material';
-import { addPatientToBlock } from '../../api/web3Functions';
+
 const NewPatientRegistration = () => {
     const [formData, setFormData] = useState({
-        firstName: '',
-        lastName: '',
-        id: '',
+        name: '',
         mobileNo: '',
         email: '',
         bloodGroup: '',
@@ -26,6 +27,10 @@ const NewPatientRegistration = () => {
         sex: '',
     });
 
+    const [error, setError] = useState(null);
+
+
+
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
@@ -34,8 +39,17 @@ const NewPatientRegistration = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        
+        const username = uuidv4();
+        const password = "123456";
+        const role = 'patient';
+        const { email } = formData;
+        await registerUser({ username, email, password ,role})
+        .then((res) => { console.log(res); })
+        
+
         // Handle form submission logic here
-        await addPatientToBlock(formData);
+        // await addPatientToBlock(formData, result.id);
         
     };
 
@@ -50,6 +64,7 @@ const NewPatientRegistration = () => {
                 padding: 4,
                 boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
                 borderRadius: 4,
+                background:'#e3f2fd'
             }}
         >
             <Typography variant="h4" gutterBottom>
@@ -58,31 +73,15 @@ const NewPatientRegistration = () => {
             <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
                     <TextField
-                        label="First Name"
-                        name="firstName"
-                        value={formData.firstName}
+                        label="Name"
+                        name="name"
+                        value={formData.name}
                         onChange={handleInputChange}
                         fullWidth
                     />
                 </Grid>
-                <Grid item xs={12} sm={6}>
-                    <TextField
-                        label="Last Name"
-                        name="lastName"
-                        value={formData.lastName}
-                        onChange={handleInputChange}
-                        fullWidth
-                    />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <TextField
-                        label="ID"
-                        name="id"
-                        value={formData.id}
-                        onChange={handleInputChange}
-                        fullWidth
-                    />
-                </Grid>
+                
+                
                 <Grid item xs={12} sm={6}>
                     <TextField
                         label="Mobile No."
@@ -195,7 +194,7 @@ const NewPatientRegistration = () => {
                                 setFormData({
                                     firstName: '',
                                     lastName: '',
-                                    id: '',
+                                    username: '',
                                     mobileNo: '',
                                     email: '',
                                     bloodGroup: '',

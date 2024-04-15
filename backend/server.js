@@ -105,6 +105,11 @@ app.post('/api/addPatients', async (req, res) => {
   }
 });
 
+app.get('/api/insuranceCompanies', async (req, res) => {
+  const result = await pool.query('SELECT * FROM insurancecompany;');
+  res.json(result.rows);
+});
+
 app.listen(port, () => {
     console.log(`Server listening on port ${port}`);
   });
