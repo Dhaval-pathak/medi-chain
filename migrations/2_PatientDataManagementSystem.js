@@ -1,6 +1,6 @@
 var PatientDataManagementSystem = artifacts.require("./PatientDataManagementSystem.sol");
 
 module.exports = function(deployer) {
-  const authorizedHospitalAddress = "0x173a168E24d9Bd62bAE4874b0b9783279932Ad55"; 
+  const authorizedHospitalAddress = "0xf89f514C36DAe1cfbcABa694647De1f2c3550571"; 
   deployer.deploy(PatientDataManagementSystem, authorizedHospitalAddress);
 };

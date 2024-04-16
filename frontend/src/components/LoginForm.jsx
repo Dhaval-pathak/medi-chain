@@ -25,7 +25,7 @@ const LoginForm = () => {
       if (response.role === 'doctor') {
         navigate('/doctor-dashboard');
       } else if (response.role === 'patient') {
-        navigate('/patient-dashboard');
+        navigate(`/patient-dashboard/${response.id}`);
       } else if (response.role === 'insurance') {
         navigate('/insurance-dashboard');
       } else {

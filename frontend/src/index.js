@@ -16,11 +16,11 @@ root.render(
       <Route path="/" element={<LoginForm />} />
       <Route path="/register" element={<RegistrationForm />} /> 
       <Route path="/doctor-dashboard" element={<DoctorDashboard />} /> 
-      <Route path="/patient-dashboard" element={<PatientDashboard />} /> 
+      <Route path="/patient-dashboard/:id" element={<PatientDashboard />} /> 
       <Route path="/insurance-dashboard" element={<InsuranceDashboard />} /> 
       <Route path="/error-page" element={<ErrorPage />} /> 
       <Route path="/new-patient-registration" element={<NewPatientRegistration />} />
-      <Route path="/create-medical-record" element={<MedicalRecordForm />} />
+      <Route path="/create-medical-record/:id" element={<MedicalRecordForm />} />
       {/* Add more routes as you build components */}
     </Routes>
   </BrowserRouter>

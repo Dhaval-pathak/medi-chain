@@ -133,8 +133,43 @@ const contractABI =[
   {
     "inputs": [
       {
+        "internalType": "uint256",
+        "name": "_id",
+        "type": "uint256"
+      },
+      {
         "internalType": "string",
         "name": "_name",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "_mobile",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "_email",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "_bloodGroup",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "_gender",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "_occupation",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "_marriedStatus",
         "type": "string"
       },
       {
@@ -186,6 +221,11 @@ const contractABI =[
       {
         "internalType": "uint256",
         "name": "_patientId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "billId",
         "type": "uint256"
       },
       {
@@ -246,6 +286,36 @@ const contractABI =[
           },
           {
             "internalType": "string",
+            "name": "mobileNumber",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "email",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "bloodGroup",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "gender",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "occupation",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "marriedStatus",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
             "name": "medicalHistory",
             "type": "string"
           },
@@ -271,7 +341,8 @@ const contractABI =[
       }
     ],
     "stateMutability": "view",
-    "type": "function"
+    "type": "function",
+    "constant": true
   },
   {
     "inputs": [
@@ -292,12 +363,12 @@ const contractABI =[
         "components": [
           {
             "internalType": "uint256",
-            "name": "billId",
+            "name": "patientId",
             "type": "uint256"
           },
           {
             "internalType": "uint256",
-            "name": "patientId",
+            "name": "billId",
             "type": "uint256"
           },
           {
@@ -332,7 +403,8 @@ const contractABI =[
       }
     ],
     "stateMutability": "view",
-    "type": "function"
+    "type": "function",
+    "constant": true
   },
   {
     "inputs": [
@@ -348,12 +420,12 @@ const contractABI =[
         "components": [
           {
             "internalType": "uint256",
-            "name": "billId",
+            "name": "patientId",
             "type": "uint256"
           },
           {
             "internalType": "uint256",
-            "name": "patientId",
+            "name": "billId",
             "type": "uint256"
           },
           {
@@ -388,17 +460,18 @@ const contractABI =[
       }
     ],
     "stateMutability": "view",
-    "type": "function"
+    "type": "function",
+    "constant": true
   }
 ];
-const contractAddress = '0x9D31Da5A5d0C17434A9aD30b48035461A5B5528B'; // Paste the deployed contract address here
+const contractAddress = '0x155554Ff65CC04Fd581a166951dE1d9F1818e67D'; // Paste the deployed contract address here
 
-export async function addMedicalBillToBlock(name, age, medicalHistory, billAmount, billDescription, treatmentDate) {
+export async function addMedicalBillToBlock(id, name, age, medicalHistory, billAmount, billDescription, treatmentDate) {
   const web3 = await initWeb3(); // Initialize Web3 with the user's Ethereum provider (e.g., Metamask)
   const accounts = await web3.eth.getAccounts();
   const contract = new web3.eth.Contract(contractABI, contractAddress);
 
-  await contract.methods.addMedicalBill(1, billAmount, billDescription, "date").send({ from: accounts[0] });
+  await contract.methods.addMedicalBill(id, billAmount, billDescription, "date").send({ from: accounts[0] });
 }
 
 
@@ -415,12 +488,12 @@ export async function getAllMedicalRecords(patientId) {
 }
 
 
-export async function addPatientToBlock(formData) {
+export async function addPatientToBlock(formData, _id) {
   const web3 = await initWeb3(); // Initialize Web3 with the user's Ethereum provider (e.g., Metamask)
   const accounts = await web3.eth.getAccounts();
   const contract = new web3.eth.Contract(contractABI, contractAddress);
-  const { firstName, lastName, id, mobileNo, email, bloodGroup, occupation, maritalStatus, dateOfBirth, patientHistory, sex } = formData;
-  await contract.methods.addPatient(firstName,mobileNo,patientHistory).send({ from: accounts[0] });
+  const { name, mobileNo, email, bloodGroup, occupation, maritalStatus, dateOfBirth, patientHistory, sex } = formData;
+  await contract.methods.addPatient(_id, name, mobileNo,email, bloodGroup, sex, occupation, maritalStatus,20, patientHistory).send({ from: accounts[0] });
 }
 
 export async function getMedicalBillWithBillID(patiendId,billId){

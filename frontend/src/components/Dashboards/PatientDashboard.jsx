@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { getAllMedicalRecords, assignInsuranceCompanyToBlock } from '../../api/web3Functions';
 import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, TextField, Modal, Backdrop, Fade } from '@mui/material';
 import PatientDetails from './PatientDetails';
+import { useParams } from 'react-router-dom';
+
 
 export const PatientDashboard = () => {
   const [medicalRecords, setMedicalRecords] = useState([]);
@@ -10,10 +12,12 @@ export const PatientDashboard = () => {
   const [assigningInsurance, setAssigningInsurance] = useState(false);
   const [openModal, setOpenModal] = useState(false); // State for controlling the modal
 
+  const params = useParams();
+
   useEffect(() => {
     const fetchMedicalRecords = async () => {
       try {
-        const patientId = 1; // Replace with the desired patient ID
+        const patientId = params.id; 
         const records = await getAllMedicalRecords(patientId);
         setMedicalRecords(records);
         console.log(records)
