@@ -44,8 +44,11 @@ const NewPatientRegistration = () => {
         const password = "123456";
         const role = 'patient';
         const { email } = formData;
-        await registerUser({ username, email, password ,role})
-        .then((res) => { console.log(res); })
+        registerUser({ username, email, password ,role})
+        .then( async (res) => { await addPatientToBlock(formData, res.id) })
+        .catch((err) => {
+            console.log(err);
+        });
         
 
         // Handle form submission logic here

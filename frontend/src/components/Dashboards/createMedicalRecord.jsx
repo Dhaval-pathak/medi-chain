@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { TextField, Button, Container, Typography } from '@mui/material';
 import { addMedicalBillToBlock  } from '../../api/web3Functions';
+import { useParams } from 'react-router-dom';
 
 const MedicalRecordForm = () => {
   const [name, setName] = useState('');
@@ -10,12 +11,14 @@ const MedicalRecordForm = () => {
   const [billDescription, setBillDescription] = useState('');
   const [treatmentDate, setTreatmentDate] = useState('');
 
+  const params = useParams();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
 
       // Add medical bill to the blockchain
-      await addMedicalBillToBlock(name, age, medicalHistory, billAmount, billDescription, treatmentDate);
+      await addMedicalBillToBlock(params.id, name, age, medicalHistory, billAmount, billDescription, treatmentDate);
 
       // Reset form fields
       setName('');

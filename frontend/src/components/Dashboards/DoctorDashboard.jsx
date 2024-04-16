@@ -32,7 +32,7 @@ export const DoctorDashboard = () => {
         try {
             const response = await loginUser({ username, password });
             if (response.role === 'patient') {
-                navigate('/create-medical-record');
+                navigate(`/create-medical-record/${response.id}`);
             }else{
                 console.error('Login failed:', "Not patient details");
                 setError('Not patient details');

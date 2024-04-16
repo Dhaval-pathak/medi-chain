@@ -30,13 +30,13 @@ app.post('/api/register',async(req,res)=>{
             const hashedPassword = await bcrypt.hash(password, salt);
         
             // Insert user into the database
-           await pool.query(
+           const result = await pool.query(
                 'INSERT INTO users (username, email, password_hash,role) VALUES ($1, $2, $3,$4) RETURNING *',
                 [username, email, hashedPassword,role] 
             );
             
         
-            res.status(201).send('Registration Successful!'); 
+            res.json(result.rows[0]); 
           } catch (err) {
             console.log(err);
             if (err.code === '23505') { // Unique constraint violation
@@ -71,6 +71,7 @@ app.post('/api/login',async(req,res)=>{
 
        // Return user data without sensitive information 
        const userData = {
+        id: user.rows[0].id,
         username: user.rows[0].username,
         email: user.rows[0].email,
         role: user.rows[0].role,
@@ -81,29 +82,6 @@ app.post('/api/login',async(req,res)=>{
       res.status(500).json({ error: 'Login failed' });
     }
 })
-
-app.post('/api/addPatients', async (req, res) => {
-  const { 
-    firstName, lastName, id, mobileNo, email, bloodGroup, occupation, 
-    maritalStatus, dateOfBirth, patientHistory, sex 
-  } = req.body;
-
-  try {
-    const result = await pool.query(
-      'INSERT INTO patients (first_name, last_name, id, mobile_no, email, blood_group, occupation, marital_status, date_of_birth, patient_history, sex) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING patient_id',
-      [firstName, lastName, id, mobileNo, email, bloodGroup, occupation, maritalStatus, dateOfBirth, patientHistory, sex] 
-    );
-
-    res.status(201).json({ patientId: result.rows[0].patient_id });
-  } catch (err) {
-    console.error('Error creating patient:', err);
-    if (err.code === '23505') { // Unique constraint violation
-        res.status(400).json({ error: 'Patient with the provided details already exists' });
-    } else {
-        res.status(500).json({ error: 'Failed to create patient' });
-    }
-  }
-});
 
 app.get('/api/insuranceCompanies', async (req, res) => {
   const result = await pool.query('SELECT * FROM insurancecompany;');
