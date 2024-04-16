@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { TextField, Button, Typography, Container, Box, Card, CardContent } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Alert from '@mui/material/Alert';
 import { registerUser } from '../api/apiFunctions';
 
@@ -12,7 +12,7 @@ const RegistrationForm = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [role, setRole] = useState('doctor');
-
+  const navigate=useNavigate();
   const handleSubmit = async (event) => {
     event.preventDefault();
     setErrorMessage('');
@@ -27,6 +27,7 @@ const RegistrationForm = () => {
       const result = await registerUser({ username, email, password, role });
       console.log('Registration result:', result);
       setSuccessMessage(result);
+      navigate('/');
     } catch (error) {
       console.log('Registration failed', error);
       setErrorMessage(error.response.data.error);

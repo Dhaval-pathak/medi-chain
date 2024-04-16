@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getAllMedicalRecords, assignInsuranceCompanyToBlock } from '../../api/web3Functions';
-import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, TextField, Modal, Backdrop, Fade } from '@mui/material';
+import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, TextField, Modal, Fade } from '@mui/material';
 import PatientDetails from './PatientDetails';
 import { useParams } from 'react-router-dom';
 
@@ -11,6 +11,7 @@ export const PatientDashboard = () => {
   const [insuranceCompanyAddress, setInsuranceCompanyAddress] = useState('');
   const [assigningInsurance, setAssigningInsurance] = useState(false);
   const [openModal, setOpenModal] = useState(false); // State for controlling the modal
+  const [billId,setBillIdOnClick]=useState(0);
 
   const params = useParams();
 
@@ -31,6 +32,7 @@ export const PatientDashboard = () => {
   }, []);
 
   const handleAssignInsurance = async () => {
+    console.log(parseInt(billId))
     if (!insuranceCompanyAddress) {
       alert('Please provide an insurance company address.');
       return;
@@ -39,7 +41,7 @@ export const PatientDashboard = () => {
     setAssigningInsurance(true);
     try {
       // Assuming there's a function to assign insurance company in your API
-      await assignInsuranceCompanyToBlock(1, insuranceCompanyAddress);
+      await assignInsuranceCompanyToBlock(params.id,parseInt(billId), insuranceCompanyAddress);
       alert('Insurance company assigned successfully.');
       setInsuranceCompanyAddress('');
       // You might want to refresh medical records here or update the specific record's insurance company
@@ -51,8 +53,9 @@ export const PatientDashboard = () => {
     }
   };
 
-  const handleOpenModal = () => {
+  const handleOpenModal = (billId) => {
     setOpenModal(true);
+    setBillIdOnClick(billId);
   };
 
   const handleCloseModal = () => {
@@ -79,7 +82,7 @@ export const PatientDashboard = () => {
         <h1 style={{ margin: 0, fontSize: '2rem' }}>Patient Dashboard</h1>
       </Box>
       
-      <PatientDetails patientId={1} />
+      <PatientDetails patientId={params.id} />
       
       <Modal
         open={openModal}
@@ -141,7 +144,7 @@ export const PatientDashboard = () => {
                     <Button variant="contained" color="primary" disabled>
                       Claimed
                     </Button> :
-                    <Button variant="contained" color="primary" onClick={handleOpenModal} >
+                    <Button variant="contained" color="primary" onClick={() => handleOpenModal(record.billId)} >
                       Not Claimed
                     </Button>
                   }</TableCell> {/* Display Status */}

@@ -19,8 +19,8 @@ contract PatientDataManagementSystem {
     }
 
     struct MedicalBill {
-        uint256 patientId;
         uint256 billId;
+        uint256 patientId;
         uint256 amount;
         string description;
         string treatmentDate;
@@ -31,7 +31,6 @@ contract PatientDataManagementSystem {
     mapping(uint256 => Patient) patients;
     mapping(uint256 => mapping(uint256 => MedicalBill)) medicalBills;
     address authorizedHospital;
-    uint256 patientCounter;
     mapping(uint256 => uint256) billCounters;
 
     event NewPatient(uint256 id, string name, uint256 age, string medicalHistory, address patientAddress);
@@ -59,7 +58,7 @@ contract PatientDataManagementSystem {
     }
 
     function assignInsuranceCompany(uint256 _patientId, uint256 billId,  address _insuranceCompany) public {
-        if(medicalBills[_patientId][billId].insuranceCompany == address(0) && patients[_patientId].insuranceCompany == address(0)){
+        if(medicalBills[_patientId][billId].insuranceCompany == address(0)){
             patients[_patientId].insuranceCompany = _insuranceCompany;
             medicalBills[_patientId][billId].insuranceCompany = _insuranceCompany;
             emit InsuranceCompanyAssigned(_patientId, _insuranceCompany);

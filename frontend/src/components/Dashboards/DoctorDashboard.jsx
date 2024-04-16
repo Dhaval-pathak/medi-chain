@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button, TextField, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { loginUser } from '../../api/apiFunctions';
 
 export const DoctorDashboard = () => {

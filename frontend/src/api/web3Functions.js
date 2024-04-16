@@ -1,6 +1,6 @@
 import { initWeb3 } from '../web3config'; // Import the initWeb3 function from your web3 utility file
 // Contract ABI and deployed contract address (you can get these from the Truffle migration output)
-const contractABI =[
+const contractABI = [
   {
     "inputs": [
       {
@@ -363,12 +363,12 @@ const contractABI =[
         "components": [
           {
             "internalType": "uint256",
-            "name": "patientId",
+            "name": "billId",
             "type": "uint256"
           },
           {
             "internalType": "uint256",
-            "name": "billId",
+            "name": "patientId",
             "type": "uint256"
           },
           {
@@ -420,12 +420,12 @@ const contractABI =[
         "components": [
           {
             "internalType": "uint256",
-            "name": "patientId",
+            "name": "billId",
             "type": "uint256"
           },
           {
             "internalType": "uint256",
-            "name": "billId",
+            "name": "patientId",
             "type": "uint256"
           },
           {
@@ -464,14 +464,14 @@ const contractABI =[
     "constant": true
   }
 ];
-const contractAddress = '0x155554Ff65CC04Fd581a166951dE1d9F1818e67D'; // Paste the deployed contract address here
+const contractAddress = '0x0796200c51Cfc285279DFbc6B182576E1225e573'; // Paste the deployed contract address here
 
 export async function addMedicalBillToBlock(id, name, age, medicalHistory, billAmount, billDescription, treatmentDate) {
   const web3 = await initWeb3(); // Initialize Web3 with the user's Ethereum provider (e.g., Metamask)
   const accounts = await web3.eth.getAccounts();
   const contract = new web3.eth.Contract(contractABI, contractAddress);
 
-  await contract.methods.addMedicalBill(id, billAmount, billDescription, "date").send({ from: accounts[0] });
+  await contract.methods.addMedicalBill(id, billAmount, billDescription, treatmentDate).send({ from: accounts[0] });
 }
 
 
@@ -508,11 +508,11 @@ export async function getMedicalBillWithBillID(patiendId,billId){
 }
 }
 
-export async function assignInsuranceCompanyToBlock(patiendId,insuranceCompanyAddress){
+export async function assignInsuranceCompanyToBlock(patiendId,billId,insuranceCompanyAddress){
   const web3 = await initWeb3(); 
   const accounts = await web3.eth.getAccounts();
   const contract = new web3.eth.Contract(contractABI, contractAddress);
-  await contract.methods.assignInsuranceCompany(patiendId,insuranceCompanyAddress).send({ from: accounts[0] });
+  await contract.methods.assignInsuranceCompany(patiendId,billId,insuranceCompanyAddress).send({ from: accounts[0] });
 }
 
 export async function processMedicalBillToBlock(patiendId,billId){

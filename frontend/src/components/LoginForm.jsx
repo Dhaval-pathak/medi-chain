@@ -38,6 +38,7 @@ const LoginForm = () => {
   };
 
   return (
+    // <div style={{backgroundColor:'black',minHeight: '100vh',display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
     <Container maxWidth="xs">
       <Box
         sx={{
@@ -137,6 +138,7 @@ const LoginForm = () => {
         </Typography>
       </Box>
     </Container>
+    // </div>
   );
 };
 

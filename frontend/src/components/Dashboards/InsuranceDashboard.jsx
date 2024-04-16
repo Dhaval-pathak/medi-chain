@@ -6,13 +6,14 @@ import PatientDetails from './PatientDetails';
 export const InsuranceDashboard = () => {
   const [claims, setClaims] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  const patientId=148;
   useEffect(() => {
     const fetchClaims = async () => {
       try {
-        const claimsData = await getAllMedicalRecords(1);
+        const claimsData = await getAllMedicalRecords(patientId);
         const updatedClaims = claimsData.map(claim => ({ ...claim, claimed: claim.isProcessed }));
         setClaims(updatedClaims);
+        console.log(claimsData)
         setLoading(false);
       } catch (error) {
         console.error('Error fetching claims:', error);
@@ -40,7 +41,7 @@ export const InsuranceDashboard = () => {
       </Box>
       <Grid container spacing={4}>
         <Grid item xs={12} md={4}>
-          <PatientDetails patientId={1} />
+          <PatientDetails patientId={patientId} />
         </Grid>
         <Grid item xs={12} md={8}>
           {loading ? (

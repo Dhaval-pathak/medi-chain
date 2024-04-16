@@ -7,7 +7,7 @@ const MedicalRecordForm = () => {
   const [name, setName] = useState('');
   const [age, setAge] = useState('');
   const [medicalHistory, setMedicalHistory] = useState('');
-  const [billAmount, setBillAmount] = useState('');
+  const [billAmount, setBillAmount] = useState(0);
   const [billDescription, setBillDescription] = useState('');
   const [treatmentDate, setTreatmentDate] = useState('');
 
@@ -24,7 +24,7 @@ const MedicalRecordForm = () => {
       setName('');
       setAge('');
       setMedicalHistory('');
-      setBillAmount('');
+      setBillAmount(0);
       setBillDescription('');
       setTreatmentDate('');
     } catch (error) {
